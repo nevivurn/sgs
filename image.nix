@@ -1,13 +1,14 @@
 {
   lib,
   dockerTools,
-  sgs,
   cacert,
   tini,
 }:
 
+{ name, exe }:
+
 dockerTools.buildLayeredImage {
-  inherit (sgs) name;
+  inherit name;
 
   contents = [ cacert ];
   config = {
@@ -15,6 +16,6 @@ dockerTools.buildLayeredImage {
       (lib.getExe tini)
       "--"
     ];
-    Cmd = [ (lib.getExe sgs) ];
+    Cmd = [ exe ];
   };
 }

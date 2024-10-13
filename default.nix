@@ -33,7 +33,7 @@ buildGoModule rec {
   ];
 
   subPackages = [
-    "cmd/sgs"
+    "cmd/sgs-server"
     "cmd/sgs-register-harbor"
   ];
   # test all packages
@@ -69,12 +69,10 @@ buildGoModule rec {
     cp -r deploy/chart $out/chart
     install -m755 deploy/worker-sync.sh $out/bin/worker-sync.sh
 
-    wrapProgram $out/bin/sgs \
+    wrapProgram $out/bin/sgs-server \
       --prefix PATH : ${lib.makeBinPath buildInputs} \
       --set-default SGS_WORKER_COMMAND "$out/bin/worker-sync.sh" \
       --set-default SGS_DEPLOY_CHART_PATH "$out/chart" \
       --set-default SGS_DEPLOY_REGHARBOR_PATH "$out/bin/sgs-register-harbor"
   '';
-
-  meta.mainProgram = "sgs";
 }

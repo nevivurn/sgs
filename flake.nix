@@ -21,13 +21,17 @@
           overlays = [ templ.overlays.default ];
         };
         selfPkgs = self.packages.${system};
+        mkImage = pkgs.callPackage ./image.nix { };
       in
       {
         packages = {
           default = selfPkgs.sgs;
           sgs = pkgs.callPackage ./. { };
           sgs-docs = pkgs.callPackage ./docs { };
-          image = pkgs.callPackage ./image.nix { inherit (selfPkgs) sgs; };
+          image = mkImage {
+            name = "sgs-server";
+            exe = "${selfPkgs.sgs}/bin/sgs-server";
+          };
         };
         devShells.default = pkgs.callPackage ./shell.nix { inherit (selfPkgs) sgs sgs-docs; };
       }
